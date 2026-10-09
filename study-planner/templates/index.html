@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Study Planner | Thongyee</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --panel: #141d30;
+      --border: #293750;
+      --text: #edf2ff;
+      --muted: #aab9d2;
+      --blue: #89b9ff;
+      --green: #80e1b6;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top right, #233c61, var(--bg) 65%);
+      min-height: 100vh;
+    }
+
+    button, input, select { font: inherit; }
+    .container { max-width: 1180px; margin: auto; padding: 32px 24px; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand { font-weight: 750; letter-spacing: 1px; }
+    .badge {
+      border: 1px solid #456185;
+      border-radius: 30px;
+      padding: 9px 15px;
+      color: #c8dcff;
+      font-size: 13px;
+    }
+
+    .hero { padding: 48px 0 28px; }
+    .eyebrow {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 62px);
+      line-height: 1.1;
+      margin: 16px 0;
+      letter-spacing: -2px;
+    }
+
+    h1 span { color: var(--blue); }
+    .intro { max-width: 650px; color: var(--muted); line-height: 1.7; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .stat, .panel {
+      background: rgba(20, 29, 48, .94);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .stat { padding: 22px; }
+    .stat-label { color: var(--muted); font-size: 13px; }
+    .stat-value { font-size: 36px; font-weight: 700; margin-top: 8px; }
+    .green { color: var(--green); }
+    .amber { color: #ffc98a; }
+    .progress-panel { padding: 22px; margin-bottom: 24px; }
+    .progress-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    progress {
+      display: block;
+      width: 100%;
+      height: 10px;
+      border: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #26334b;
+      accent-color: var(--blue);
+    }
+
+    progress::-webkit-progress-bar { background: #26334b; }
+    progress::-webkit-progress-value { background: var(--blue); }
+    progress::-moz-progress-bar { background: var(--blue); }
+    .workspace {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel { padding: 26px; }
+    h2 { margin: 0 0 8px; font-size: 22px; }
+    .subtitle { margin: 0 0 24px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    label { display: block; margin: 18px 0 8px; font-size: 14px; }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      background: #0d1525;
+      border: 1px solid #3b4a64;
+      border-radius: 9px;
+      color: var(--text);
+    }
+
+    input::placeholder { color: #8091ae; }
+    :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+    button {
+      cursor: pointer;
+      border-radius: 9px;
+      padding: 12px 16px;
+      font-weight: 650;
+    }
+
+    .add-button {
+      width: 100%;
+      margin-top: 24px;
+      color: #0b1730;
+      background: var(--blue);
+      border: 1px solid var(--blue);
+    }
+
+    .add-button:hover { background: #afd0ff; }
+    .task-heading { display: flex; justify-content: space-between; gap: 12px; }
+    .count { color: var(--muted); font-size: 13px; white-space: nowrap; }
+    .task-list { list-style: none; padding: 0; margin: 0; }
+    .task {
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .task-title { margin: 0 0 8px; font-size: 17px; overflow-wrap: anywhere; }
+    .task.completed .task-title { text-decoration: line-through; color: var(--muted); }
+    .subject { color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .tag {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: #23314a;
+      color: #c7d7ef;
+    }
+
+    .priority-high, .overdue { background: #432735; color: #ffb8c6; }
+    .priority-medium { background: #403526; color: #ffd596; }
+    .priority-low, .done { background: #203d36; color: #a2ebcd; }
+    .toggle {
+      background: transparent;
+      color: var(--blue);
+      border: 1px solid #4b6890;
+      padding: 9px 12px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .toggle:hover { background: #243b59; }
+    .empty { text-align: center; padding: 44px 12px; color: var(--muted); line-height: 1.7; }
+    .empty-icon { font-size: 36px; color: var(--blue); margin-bottom: 12px; }
+    .error {
+      border: 1px solid #a15b6a;
+      background: #3c2330;
+      color: #ffd0d8;
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .note { color: var(--muted); font-size: 12px; line-height: 1.6; margin-top: 18px; }
+    footer {
+      margin-top: 36px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 850px) {
+      .workspace { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 24px 16px; }
+      header { align-items: flex-start; flex-direction: column; }
+      .panel { padding: 20px; }
+      .task-top { flex-direction: column; }
+      .hero { padding-top: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">THONGYEE / STUDY PLANNER</div>
+      <div class="badge">SWE40006 · Task 4.3</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">A little structure. More focus.</div>
+        <h1>Make room for<br><span>your next achievement.</span></h1>
+        <p class="intro">
+          Organise your subjects, plan upcoming deadlines, and track your
+          progress — one completed task at a time.
+        </p>
+      </section>
+
+      <section class="stats" aria-label="Task statistics">
+        <div class="stat">
+          <div class="stat-label">Total tasks</div>
+          <div class="stat-value">{{ total }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Still to do</div>
+          <div class="stat-value">{{ pending }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Completed</div>
+          <div class="stat-value green">{{ completed }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Overdue</div>
+          <div class="stat-value amber">{{ overdue }}</div>
+        </div>
+      </section>
+
+      <section class="panel progress-panel" aria-label="Completion progress">
+        <div class="progress-heading">
+          <span>Your progress</span>
+          <strong>{{ progress }}% complete</strong>
+        </div>
+        <progress value="{{ progress }}" max="100"
+                  aria-label="Percentage of tasks completed">
+          {{ progress }}%
+        </progress>
+      </section>
+
+      {% if error %}
+      <div class="error" role="alert">{{ error }}</div>
+      {% endif %}
+
+      <div class="workspace">
+        <section class="panel">
+          <h2>Plan something new</h2>
+          <p class="subtitle">Turn your next goal into a clear, manageable task.</p>
+
+          <form method="post" action="{{ url_for('add_task') }}">
+            <label for="title">Task title</label>
+            <input id="title" name="title" type="text" required maxlength="100"
+                   placeholder="Prepare deployment demonstration">
+
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" required maxlength="60"
+                   placeholder="Software Deployment and Evolution">
+
+            <label for="due_date">Due date</label>
+            <input id="due_date" name="due_date" type="date" required
+                   value="{{ today }}">
+
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority" required>
+              <option value="Low">Low — whenever possible</option>
+              <option value="Medium" selected>Medium — keep on track</option>
+              <option value="High">High — focus first</option>
+            </select>
+
+            <button class="add-button" type="submit">+ Add study task</button>
+          </form>
+
+          <p class="note">
+            Shared demonstration planner. Use sample tasks and avoid
+            personal information.
+          </p>
+        </section>
+
+        <section class="panel">
+          <div class="task-heading">
+            <h2>Your study queue</h2>
+            <span class="count">{{ total }} task{{ '' if total == 1 else 's' }}</span>
+          </div>
+          <p class="subtitle">Pending tasks appear first, ordered by due date.</p>
+
+          {% if tasks %}
+          <ul class="task-list">
+            {% for task in tasks %}
+            <li class="task {{ 'completed' if task['completed'] else '' }}">
+              <div class="task-top">
+                <div>
+                  <h3 class="task-title">{{ task['title'] }}</h3>
+                  <div class="subject">{{ task['subject'] }}</div>
+                </div>
+                <form method="post"
+                      action="{{ url_for('toggle_task', task_id=task['id']) }}">
+                  <button class="toggle" type="submit"
+                          aria-label="{{ 'Reopen' if task['completed'] else 'Complete' }} task: {{ task['title'] }}">
+                    {{ '↺ Reopen' if task['completed'] else '✓ Complete' }}
+                  </button>
+                </form>
+              </div>
+              <div class="tags">
+                <span class="tag">Due {{ task['due_date'] }}</span>
+                <span class="tag priority-{{ task['priority']|lower }}">
+                  {{ task['priority'] }} priority
+                </span>
+                {% if task['completed'] %}
+                <span class="tag done">Completed</span>
+                {% elif task['due_date'] < today %}
+                <span class="tag overdue">Overdue</span>
+                {% else %}
+                <span class="tag">Pending</span>
+                {% endif %}
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <div class="empty">
+            <div class="empty-icon" aria-hidden="true">✦</div>
+            <strong>Your next achievement starts here.</strong><br>
+            Add your first study task using the form.
+          </div>
+          {% endif %}
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>SWE40006 · Software Deployment and Evolution</span>
+      <span>Study Planner · Flask + SQLite · Thongyee</span>
+    </footer>
+  </div>
+</body>
+</html>
