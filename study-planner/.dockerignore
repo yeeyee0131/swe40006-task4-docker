@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+.git/
+data/
+*.db
+*.db-shm
+*.db-wal
+*.pem
+*.txt.txt
+Dockerfile.txt
